@@ -37,15 +37,17 @@ public class BlockService {
      * @param block Bloque a ser añadido
      * @return true si el bloque pasa la validacion y es añadida a la cadena
      */
-    public synchronized boolean add(Block block) {
+    public synchronized boolean add(Block block) throws Exception {
         if (validate(block)) {
-            this.blockchain.getBlocks().add(block);
+            this.blockchain.add(block);
             //eliminar las transacciones incluidas en el bloque del pool de transacciones
             block.getTransactions().forEach(transactionService::remove);
             return true;
+        } else {
+            throw new Exception("El bloque no puede ser añadido a la cadena");
         }
-        return false;
     }
+
 
     /**
      * Validar un bloque a ser añadido a la cadena
@@ -74,13 +76,13 @@ public class BlockService {
         }
 
         //max numero de bloques en la cadena
-        if(block.getTransactions().size() > maxTransactionsPerBlock) {
+        if(block.getTransactions().size() > maxTransactionsPerBlock + 1) {
             log.error("El bloque tiene mas transacciones de las permitidas: {}", block);
             return false;
         }
 
         //verificar que todas las transacciones estaban en mi pool
-        if(!transactionService.contains(block.getTransactions())) {
+        if(!transactionService.contains(block.getTransactions().subList(1, block.getTransactions().size()))) {
             log.error("Alguna de las transacciones del bloque no esta en el pool: {}", block);
             return false;
         }

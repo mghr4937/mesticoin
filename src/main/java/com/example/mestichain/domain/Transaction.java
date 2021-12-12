@@ -52,11 +52,11 @@ public class Transaction {
     }
 
     public Transaction(byte[] recipient) {
-        this.recipient = recipient;
         this.isCoinbase = true;
+        this.recipient = recipient;
         this.timestamp = System.currentTimeMillis();
         this.hash = this.calculateHash();
-        this.amount = coinbaseAmount;
+        this.amount = 10;
     }
 
     /**
@@ -132,7 +132,7 @@ public class Transaction {
     public String toString() {
         return "{\nHash: " + Base64.encodeBase64String(this.hash) + ",\nEmisor: " + Base64.encodeBase64String(this.sender) + ",\nDestinatario: "
                 + Base64.encodeBase64String(this.recipient) + ",\nCantidad: " + this.amount + ",\nFirma: " + Base64.encodeBase64String(this.signature)
-                + ",\nTimestamp: " + new Date(this.timestamp) + "\n}";
+                + ",\nTimestamp: " + this.timestamp + "\n}";
     }
 }
 

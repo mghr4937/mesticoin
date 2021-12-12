@@ -1,5 +1,7 @@
 package com.example.mestichain.services;
 
+import com.example.mestichain.domain.Block;
+import com.example.mestichain.domain.Transaction;
 import com.example.mestichain.utils.constants.Path;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

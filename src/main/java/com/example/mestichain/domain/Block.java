@@ -3,6 +3,7 @@ package com.example.mestichain.domain;
 import com.google.common.primitives.Longs;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -43,8 +44,9 @@ public class Block {
         this.previousHash = previousHash;
         this.transactions = transactions;
         this.nonce = nonce;
+        this.merkleRoot = this.calculateMerkleRoot();
         this.timestamp = System.currentTimeMillis();
-        this.hash = calculateHash();
+        this.hash = this.calculateHash();
     }
 
     /**
@@ -91,12 +93,12 @@ public class Block {
     @Override
     public String toString() {
         return "Block{" +
-                "hash=" + Arrays.toString(hash) +
-                ", previousHash=" + Arrays.toString(previousHash) +
-                ", timestamp=" + timestamp +
-                ", nonce=" + nonce +
-                ", merkleRoot=" + Arrays.toString(merkleRoot) +
-                ", transactions=" + transactions +
+                "\nhash=" + Base64.encodeBase64String(hash) +
+                ",\npreviousHash=" + Base64.encodeBase64String(previousHash) +
+                ",\ntimestamp=" + timestamp +
+                ",\nnonce=" + nonce +
+                ",\nmerkleRoot=" + Base64.encodeBase64String(merkleRoot) +
+                ",\ntransactions=" + transactions +
                 '}';
     }
 

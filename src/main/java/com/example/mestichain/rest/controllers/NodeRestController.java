@@ -42,7 +42,7 @@ public class NodeRestController {
      * @param urlNode a ser dado de alta
      */
     @PostMapping()
-    public void registerNode(@RequestBody URL urlNode, HttpServletResponse response) {
+    public void addNode(@RequestBody URL urlNode, HttpServletResponse response) {
         log.info("Alta de nodo {}", urlNode);
         nodeService.registerNode(urlNode);
         response.setStatus(HttpServletResponse.SC_OK);

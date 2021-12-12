@@ -16,7 +16,7 @@ public class RecordBalances {
 
 
     public Long getAccountBalance(byte[] address) {
-        return (this.balances.getOrDefault(this.getAddressAsString(address), 0L));
+        return this.balances.getOrDefault(this.getAddressAsString(address), 0L);
     }
 
     public void setAccountBalance(byte[] address, Long balance) {
@@ -29,7 +29,7 @@ public class RecordBalances {
 
     public void settleTransaction(Transaction transaction) throws Exception {
         if(transaction.isCoinbase()){
-            this.addAccountBalance(transaction.getSender(), transaction.getAmount());
+            this.addAccountBalance(transaction.getRecipient(), transaction.getAmount());
         } else {
             if(this.getAccountBalance(transaction.getSender()) >= transaction.getAmount()) {
                 this.addAccountBalance(transaction.getSender(), -transaction.getAmount());
@@ -40,6 +40,10 @@ public class RecordBalances {
         }
     }
 
+    public boolean isValidAccount(byte[] address) {
+        return this.balances.containsKey(this.getAddressAsString(address));
+    }
+
     private String getAddressAsString(byte[] address) {
         return Base64.encodeBase64String(address);
     }
@@ -48,11 +52,11 @@ public class RecordBalances {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         Enumeration<String> accounts = this.balances.keys();
-        sb.append("CLAVE PUBLICA | SALDO\n");
-        sb.append("--------------------------------\n");
+        sb.append("\nCLAVE PUBLICA | SALDO\n");
+        sb.append("--------------------------------------\n");
         while (accounts.hasMoreElements()) {
             String account = accounts.nextElement();
-            sb.append(account).append(" | ").append(this.balances.get(account)).append("\n");
+            sb.append(account, 0, 20).append(" | ").append(this.balances.get(account)).append("\n");
             if (accounts.hasMoreElements()) sb.append("\n");
         }
         return sb.toString();

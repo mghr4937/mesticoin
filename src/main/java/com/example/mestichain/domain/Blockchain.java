@@ -57,6 +57,26 @@ public class Blockchain {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Blockchain cadena = (Blockchain) o;
+
+        if (blocks.size() != cadena.getBlocks().size())
+            return false;
+
+        for (int i = 0; i < blocks.size(); i++) {
+            if (blocks.get(i) != cadena.getBlocks().get(i))
+                return false;
+        }
+
+        return true;
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Block block : this.blocks) {

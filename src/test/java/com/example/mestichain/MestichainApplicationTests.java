@@ -4,6 +4,7 @@ import com.example.mestichain.domain.Transaction;
 import com.example.mestichain.utils.SignatureUtils;
 import com.example.mestichain.utils.constants.Path;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.security.KeyPair;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
 class MestichainApplicationTests {
@@ -37,10 +39,14 @@ class MestichainApplicationTests {
 	@Test
 	public void addTransaction() throws Exception {
 		KeyPair senderKey = SignatureUtils.generateKeyPair();
+		log.info("Sender Key: {}", senderKey);
 		KeyPair recipientKey = SignatureUtils.generateKeyPair();
+		log.info("Recipient Key: {}", recipientKey);
 
 		Transaction transaction = new Transaction(senderKey.getPublic().getEncoded(), recipientKey.getPublic().getEncoded(), 100);
+
 		transaction.setSignature(SignatureUtils.sign(transaction.getContent(), senderKey.getPrivate().getEncoded()));
+		log.info("Transaction created: {}", transaction);
 
 		mvc.perform(MockMvcRequestBuilders.post(Path.TRANSACTION).content(asJsonString(transaction))
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isAccepted());
